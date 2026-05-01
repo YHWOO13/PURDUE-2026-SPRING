@@ -5,18 +5,18 @@ A knowledge graph-based reflection assistant that helps users synthesize insight
 
 ---
 
-## 📌 Overview
+## ■ Overview
 
 Conference attendees often struggle to connect ideas across multiple sessions.  
 While they are exposed to many topics, the knowledge remains fragmented and lacks integration.
 
 This project reframes conference learning as a **knowledge synthesis problem** rather than simple information consumption.
 
-➡️ Goal: Help users build a "big picture" understanding from scattered conference materials.
+==> Goal: Help users build a "big picture" understanding from scattered conference materials.
 
 ---
 
-## 🎯 Problem
+## ■ Problem
 
 - Attendees join many sessions but:
   - Topics are fragmented
@@ -30,7 +30,7 @@ This is fundamentally a **cognitive + learning problem**, not a logistics proble
 
 ---
 
-## 💡 Solution
+## ■ Solution
 
 This system builds a **Knowledge Graph-based reflection assistant** that:
 
@@ -44,14 +44,14 @@ This system builds a **Knowledge Graph-based reflection assistant** that:
 
 ---
 
-## 🏗️ System Architecture
+## ■ System Architecture
 
 <img width="1536" height="1024" alt="ChatGPT Image Apr 25, 2026, 03_54_09 PM" src="https://github.com/user-attachments/assets/33fa92bb-7be1-4e22-ad15-1754f2d2371f" />
 
 
 ---
 
-## ⚙️ Tech Stack
+## ■ Tech Stack
 
 ### Frontend
 - React (graph visualization & interaction)
@@ -73,14 +73,14 @@ This system builds a **Knowledge Graph-based reflection assistant** that:
 
 ---
 
-## 🧠 Key Design Principle
+## ■ Key Design Principle
 
 > The LLM does NOT build the graph.  
 > It only proposes candidates — the system validates everything.
 
 ---
 
-## 🛡️ Hallucination Control Strategy
+## ■ Hallucination Control Strategy
 
 - Limit extraction size
   - ~8–12 concepts per paper
@@ -89,11 +89,11 @@ This system builds a **Knowledge Graph-based reflection assistant** that:
 - Validate relationships with evidence
 - Separate concept detection from relationship logic
 
-➡️ Nothing enters the graph without grounding.
+==> Nothing enters the graph without grounding.
 
 ---
 
-## 🔍 Key Features
+## ■ Key Features
 
 - 📊 Knowledge Graph Visualization
 - 🔗 Cross-paper Concept Alignment
@@ -102,7 +102,7 @@ This system builds a **Knowledge Graph-based reflection assistant** that:
 
 ---
 
-## ⚖️ Trade-offs
+## ■ Trade-offs
 
 - LLM extraction can be noisy
 - Concept alignment is approximate
@@ -110,7 +110,7 @@ This system builds a **Knowledge Graph-based reflection assistant** that:
 
 ---
 
-## 🚧 Limitations
+## ■ Limitations
 
 - Some concepts/relations may be missing
 - Strict grounding may reduce coverage
@@ -118,7 +118,7 @@ This system builds a **Knowledge Graph-based reflection assistant** that:
 
 ---
 
-## 🔮 Future Work
+## ■ Future Work
 
 - Improve concept alignment across papers
 - Enhance relation quality
@@ -126,10 +126,8 @@ This system builds a **Knowledge Graph-based reflection assistant** that:
 
 ---
 
-## 🎥 Demo
+## ■ Demo
 
 👉 (Add video link here — recommended: YouTube)
 
 ---
-
-## 📂 Project Structure

@@ -1,6 +1,5 @@
 # PURDUE-2026-SPRING
-# CNIT566 Project
-# Conference Knowledge Synthesis Assistant
+# CNIT566 Project - Conference Knowledge Synthesis Assistant
 
 A knowledge graph-based reflection assistant that helps users synthesize insights across multiple conference sessions.
 
@@ -47,23 +46,8 @@ This system builds a **Knowledge Graph-based reflection assistant** that:
 
 ## 🏗️ System Architecture
 
-### 1. Input
-- Paper PDFs
-- Personal notes
+<img width="1536" height="1024" alt="ChatGPT Image Apr 25, 2026, 03_54_09 PM" src="https://github.com/user-attachments/assets/33fa92bb-7be1-4e22-ad15-1754f2d2371f" />
 
-### 2. Processing
-- Concept extraction
-- Relationship extraction
-
-### 3. Knowledge Graph
-- Nodes: Concepts
-- Edges: Relationships
-- Cross-paper concept merging
-
-### 4. Insights & Interaction
-- Big picture visualization
-- Alignment view (compare ideas)
-- Blind spot detection
 
 ---
 

@@ -1,7 +1,3 @@
-
-
-https://github.com/user-attachments/assets/97c938d1-f34e-4550-a790-b6c074b756f9
-
 # PURDUE-2026-SPRING
 # CNIT566 Project - Conference Knowledge Synthesis Assistant
 

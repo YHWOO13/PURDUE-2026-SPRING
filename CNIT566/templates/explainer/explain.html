@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Conference Knowledge Synthesis Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 24px;
+            background: #f7f7f7;
+            color: #111827;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .hero-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px auto;
+            font-size: 36px;
+        }
+
+        .subtitle {
+            color: #475569;
+            line-height: 1.5;
+            font-size: 18px;
+        }
+
+        .section, .card {
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 24px;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: #f3f4f6;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            font-size: 24px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+
+        input, textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 130px;
+        }
+
+        button, .button-link {
+            background: #111827;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 24px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .secondary {
+            background: white;
+            color: #111827;
+            border: 1px solid #cbd5e1;
+        }
+
+        .danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .hidden { display: none; }
+
+        .top-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .project-header {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 28px;
+        }
+
+        .muted {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .blue-panel {
+            background: #eff6ff;
+            border: 1px solid #60a5fa;
+            border-radius: 10px;
+            padding: 20px;
+            color: #1e3a8a;
+        }
+
+        .mini-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .mini-stat {
+            background: white;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .mini-stat strong {
+            display: block;
+            font-size: 18px;
+            color: #1e40af;
+        }
+
+        .processing-card {
+            max-width: 540px;
+            margin: 60px auto;
+            padding: 40px;
+            border: 2px solid #d1d5db;
+            border-radius: 12px;
+            background: white;
+        }
+
+        .processing-title {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .step-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+
+        .step-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-weight: bold;
+        }
+
+        .step-row.done .step-icon {
+            background: #111827;
+            color: white;
+            border-color: #111827;
+        }
+
+        .step-row.pending {
+            color: #94a3b8;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 3px solid #d1d5db;
+            border-top: 3px solid #111827;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .graph-box {
+            min-height: 820px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 16px;
+            background: white;
+            overflow: hidden;
+        }
+
+        .graph-caption {
+            text-align: center;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .node-circle {
+            fill: white;
+            stroke: #111827;
+            stroke-width: 2;
+        }
+
+        .node-circle.missing {
+            stroke: #f97316;
+            stroke-width: 3;
+        }
+
+        .node-text {
+            font-size: 12px;
+            font-weight: 700;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            pointer-events: none;
+        }
+
+        .edge-line {
+            stroke: #666;
+            stroke-width: 2;
+            marker-end: url(#arrow);
+        }
+
+        .edge-line.weak {
+            stroke: #9ca3af;
+            stroke-width: 2;
+            stroke-dasharray: 6 5;
+            marker-end: url(#arrow-weak);
+        }
+
+        .edge-label {
+            font-size: 10px;
+            fill: #555;
+            text-anchor: middle;
+        }
+
+        .edge-label.weak {
+            fill: #6b7280;
+            font-style: italic;
+        }
+
+        .legend-line {
+            display: inline-block;
+            width: 28px;
+            border-top: 2px solid #666;
+        }
+
+        .legend-line.dashed {
+            border-top: 2px dashed #9ca3af;
+        }
+
+        .graph-legend {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 8px;
+            color: #475569;
+            font-size: 12px;
+        }
+
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 20px;
+            margin: 4px;
+            font-size: 12px;
+            background: white;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .warning { border-left: 4px solid #f97316; }
+        .success { border-left: 4px solid #22c55e; }
+
+        .error {
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .project-list {
+            text-align: left;
+            margin-top: 42px;
+        }
+
+        .project-card-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .project-card-actions form {
+            display: inline;
+        }
+
+        .alignment-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+        }
+
+        .alignment-item {
+            background: #f8fafc;
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 14px 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .status-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .status-covered {
+            color: #16a34a;
+            border-color: #16a34a;
+        }
+
+        .status-missing {
+            color: #f97316;
+            border-color: #f97316;
+        }
+
+        .zoom-controls {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .zoom-controls button {
+            padding: 8px 14px;
+            margin-left: 6px;
+        }
+
+        #kg-svg {
+            cursor: grab;
+            background: #ffffff;
+        }
+
+        #kg-svg:active {
+            cursor: grabbing;
+        }
+
+
+
+        .alignment-scroll-box {
+            max-height: 420px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .alignment-scroll-box::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .alignment-scroll-box::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 999px;
+        }
+
+        .paper-list-compact {
+            display: block;
+            max-height: 460px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .paper-list-compact::-webkit-scrollbar,
+        #blind-spots-output::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .paper-list-compact::-webkit-scrollbar-thumb,
+        #blind-spots-output::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 999px;
+        }
+
+        .paper-header {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: white;
+        }
+
+        #blind-spots-output {
+            max-height: 560px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .paper-header {
+            display: grid;
+            grid-template-columns: 90px 1.2fr 2.2fr 1.4fr;
+            gap: 12px;
+            padding: 10px 0 14px 0;
+            border-bottom: 2px solid #cbd5e1;
+            font-size: 13px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .paper-header span {
+            display: block;
+        }
+
+        .paper-header small {
+            display: block;
+            margin-top: 3px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 400;
+            line-height: 1.35;
+        }
+
+        .listed-paper-help {
+            margin-top: -6px;
+            margin-bottom: 14px;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .paper-row {
+            display: grid;
+            grid-template-columns: 90px 1.2fr 2.2fr 1.4fr;
+            gap: 12px;
+            align-items: start;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        .paper-row:last-child {
+            border-bottom: none;
+        }
+
+        .paper-row-number {
+            font-weight: 800;
+            color: #111827;
+            white-space: nowrap;
+        }
+
+        .paper-row-title {
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .paper-row-concepts {
+            color: #475569;
+            line-height: 1.45;
+        }
+
+        .paper-row-notes {
+            color: #64748b;
+            line-height: 1.45;
+            font-style: italic;
+        }
+
+        .paper-row-empty {
+            color: #94a3b8;
+        }
+
+        .file-input-note {
+            margin-top: 6px;
+            margin-bottom: 10px;
+        }
+
+        .notes-raw-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 14px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            color: #334155;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 800px) {
+            .feature-grid,
+            .alignment-columns,
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .paper-row,
+            .paper-header {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+
+            .top-actions {
+                display: block;
+            }
+        }
+    </style>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+
+    {% if not has_project %}
+    <div id="landing-section" class="center">
+        <div class="hero-icon">📖</div>
+        <h1>Conference Knowledge Synthesis Assistant</h1>
+        <p class="subtitle">
+            Build comprehensive knowledge graphs from conference papers and notes.<br>
+            Discover connections, identify blind spots, and synthesize insights across multiple papers.
+        </p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>Build Knowledge Graphs</h3>
+                <p class="muted">Extract concepts and relationships from papers automatically.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Detect Blind Spots</h3>
+                <p class="muted">Compare paper concepts with your notes to find missed ideas.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Incremental Growth</h3>
+                <p class="muted">Add papers progressively and discover cross-paper connections.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📁</div>
+                <h3>Organize by Project</h3>
+                <p class="muted">Create separate projects for different conferences or topics.</p>
+            </div>
+        </div>
+
+        <br><br>
+        <button id="show-create-project">Create New Project →</button>
+
+        {% if projects %}
+        <div class="section project-list">
+            <h2>Your Projects</h2>
+            <p class="muted">Open an existing project or delete projects you no longer need.</p>
+
+            {% for project in projects %}
+            <div class="card">
+                <h3>📁 {{ project.title }}</h3>
+                <p class="muted">Saved project</p>
+
+                <div class="project-card-actions">
+                    <form class="open-project-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="action_type" value="open_project">
+                        <input type="hidden" name="project_id" value="{{ project.id }}">
+                        <button type="submit">Open Project</button>
+                    </form>
+
+                    <form class="delete-project-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="action_type" value="delete_project">
+                        <input type="hidden" name="project_id" value="{{ project.id }}">
+                        <button type="submit" class="danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div id="create-project-section" class="section hidden">
+        <h2>📁 Create New Project</h2>
+
+        <form id="project-form">
+            {% csrf_token %}
+            <input type="hidden" name="action_type" value="create_project">
+
+            <label>Project Name *</label>
+            <input name="project_name" id="project_name" placeholder="e.g., NeurIPS 2026 LLM Track">
+
+            <label>Conference / Event</label>
+            <input name="conference" id="conference" placeholder="e.g., NeurIPS 2026">
+
+            <label>Description / Focus Area</label>
+            <textarea name="description" placeholder="What are you researching or trying to learn?"></textarea>
+
+            <br><br>
+            <button type="submit">Create Project & Add First Paper</button>
+        </form>
+    </div>
+    {% endif %}
+
+    {% if has_project %}
+    <div id="main-app-section">
+        <div class="project-header">
+            <h3>📁 {{ thread.title }}</h3>
+            <p class="muted">
+                Based on <span id="header-paper-count">{{ analyses_count }}</span>
+                paper analysis{{ analyses_count|pluralize }} and your notes
+            </p>
+        </div>
+
+        <div class="top-actions">
+            <div>
+                <h2>Knowledge Graph Analysis</h2>
+                <p class="muted">Add papers to grow your project-level knowledge graph.</p>
+            </div>
+
+            <div>
+                <a href="/explainer/?new=1" class="button-link secondary">New Project / Home</a>
+                <button id="show-add-paper">+ Add Another Paper</button>
+            </div>
+        </div>
+
+        <div id="add-paper-section" class="section {% if analyses_count > 0 %}hidden{% endif %}">
+            <h2 id="add-paper-title">
+                {% if analyses_count == 0 %}
+                    Add Your First Paper
+                {% else %}
+                    Add Another Paper
+                {% endif %}
+            </h2>
+
+            {% if analyses_count > 0 %}
+            <div id="existing-kg-panel" class="blue-panel">
+                <h3>🔗 Extending Existing Knowledge Graph</h3>
+                <p>
+                    You have <strong id="existing-paper-count">{{ project_stats.papers_count }}</strong>
+                    paper{{ project_stats.papers_count|pluralize }} in your knowledge graph.
+                    New concepts will be integrated and relationships will be identified across all papers.
+                </p>
+
+                <div class="mini-stats">
+                    <div class="mini-stat">
+                        <strong id="status-paper-count">{{ project_stats.papers_count }}</strong>
+                        <span>Papers</span>
+                    </div>
+                    <div class="mini-stat">
+                        <strong id="status-core-count">{{ project_stats.core_concepts_count }}</strong>
+                        <span>Core Concepts</span>
+                    </div>
+                    <div class="mini-stat">
+                        <strong id="status-blind-count">{{ project_stats.blind_spots_count }}</strong>
+                        <span>Blind Spots</span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <form id="analysis-form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action_type" id="action_type" value="analyze">
+
+                <label>Paper title</label>
+                <input name="paper_title" id="paper_title" placeholder="e.g., Knowledge Graph Reliability for ...">
+
+                <label id="paper-label">
+                    {% if analyses_count == 0 %}
+                        Paper content
+                    {% else %}
+                        Upload Paper #{{ project_stats.next_paper_number }}
+                    {% endif %}
+                </label>
+                <label>Input PDF</label>
+                <input type="file" name="paper_file" id="paper_file" accept="application/pdf">
+                <p class="muted file-input-note">Upload a PDF or paste paper text below.</p>
+
+                <textarea name="paper_text" id="paper_text" placeholder="Paste abstract, key findings, or excerpts from the paper..."></textarea>
+
+                <label>Your notes for this paper</label>
+                <textarea name="user_notes" id="user_notes" placeholder="Paste or write your session notes for this specific paper..."></textarea>
+
+                <br><br>
+                <div class="center">
+                    <div class="button-row">
+                        <button type="submit" id="build-kg-btn">
+                            {% if analyses_count == 0 %}
+                                Build Knowledge Graph
+                            {% else %}
+                                Extend Knowledge Graph
+                            {% endif %}
+                        </button>
+
+                        <button type="button" id="extract-kg-btn" class="secondary">
+                            Extract KG Only
+                        </button>
+                    </div>
+
+                    <p class="muted">
+                        AI will extract concepts, update the project graph, and compare your notes with the paper content.
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <div id="processing-section" class="hidden">
+            <div class="processing-card">
+                <h2 class="processing-title" id="processing-title">Analyzing...</h2>
+
+                <div class="step-row pending" id="step-1">
+                    <div class="step-icon">1</div>
+                    <div>Extracting key concepts</div>
+                </div>
+
+                <div class="step-row pending" id="step-2">
+                    <div class="step-icon">2</div>
+                    <div>Detecting relationships between ideas</div>
+                </div>
+
+                <div class="step-row pending" id="step-3">
+                    <div class="step-icon">3</div>
+                    <div>Updating project-level knowledge graph</div>
+                </div>
+
+                <div class="step-row pending" id="step-4">
+                    <div class="step-icon">4</div>
+                    <div>Comparing paper content with your notes</div>
+                </div>
+
+                <br>
+                <div class="center">
+                    <button id="view-results-btn" class="hidden">View Results</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="results-section" class="{% if latest_result %}{% else %}hidden{% endif %}">
+            <div class="section">
+                <h3>Big Picture Summary</h3>
+                <p id="big-picture-output"></p>
+            </div>
+
+            <h2>Listed Paper View</h2>
+            <div class="section">
+                <p class="listed-paper-help">
+                    
+                </p>
+                <div id="paper-list-output" class="paper-list-compact"></div>
+            </div>
+
+            <h2>Big Picture View</h2>
+            <div class="graph-box">
+                <div class="zoom-controls">
+                    <button type="button" id="download-triples-btn" class="secondary">Download Triples CSV</button>
+                    <button type="button" id="download-graph-btn" class="secondary">Download Graph Image</button>
+                    <button type="button" id="zoom-in-btn">+</button>
+                    <button type="button" id="zoom-out-btn">−</button>
+                    <button type="button" id="zoom-reset-btn">Reset</button>
+                </div>
+
+                <svg id="kg-svg" width="100%" height="760" viewBox="0 0 1600 950"></svg>
+
+                <div class="graph-legend" id="graph-legend"></div>
+
+                <p class="graph-caption">
+                    This graph shows how major concepts connect across your project papers and notes.
+                    Dashed edges indicate weak cross-paper links. Hover over an edge to inspect its relation scope and evidence.
+                    Use + / − to zoom and drag the graph to move around.
+                </p>
+            </div>
+
+
+            <h2>Blind Spot Detection</h2>
+            <div id="blind-spots-output"></div>
+
+            <div class="section center">
+                <p><strong>Strengthen your knowledge graph:</strong> Add more papers to discover cross-paper connections, emerging themes, and knowledge gaps.</p>
+                <button id="add-paper-bottom">Add Another Paper</button>
+            </div>
+        </div>
+
+        <div id="error-section" class="section hidden">
+            <h2>Error</h2>
+            <div id="error-output" class="error"></div>
+        </div>
+    </div>
+
+    {{ latest_result|json_script:"latest-result-data" }}
+    {% endif %}
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const createBtn = document.getElementById("show-create-project");
+    const landingSection = document.getElementById("landing-section");
+    const createProjectSection = document.getElementById("create-project-section");
+    const projectForm = document.getElementById("project-form");
+
+    if (createBtn) {
+        createBtn.addEventListener("click", () => {
+            landingSection.classList.add("hidden");
+            createProjectSection.classList.remove("hidden");
+        });
+    }
+
+    if (projectForm) {
+        projectForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(projectForm);
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            const response = await fetch("{% url 'start_job' %}", {
+                method: "POST",
+                body: formData,
+                headers: { "X-CSRFToken": csrfToken }
+            });
+
+            const data = await response.json();
+
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            } else {
+                alert(data.error || "Failed to create project.");
+            }
+        });
+    }
+
+    const openProjectForms = document.querySelectorAll(".open-project-form");
+
+    openProjectForms.forEach(form => {
+        form.addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            const response = await fetch("{% url 'start_job' %}", {
+                method: "POST",
+                body: formData,
+                headers: { "X-CSRFToken": csrfToken }
+            });
+
+            const data = await response.json();
+
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            } else {
+                alert(data.error || "Failed to open project.");
+            }
+        });
+    });
+
+    const deleteProjectForms = document.querySelectorAll(".delete-project-form");
+
+    deleteProjectForms.forEach(form => {
+        form.addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const confirmed = confirm("Are you sure you want to delete this project?");
+            if (!confirmed) return;
+
+            const formData = new FormData(form);
+            const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            const response = await fetch("{% url 'start_job' %}", {
+                method: "POST",
+                body: formData,
+                headers: { "X-CSRFToken": csrfToken }
+            });
+
+            const data = await response.json();
+
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            } else {
+                alert(data.error || "Failed to delete project.");
+            }
+        });
+    });
+
+    const analysisForm = document.getElementById("analysis-form");
+    const actionTypeInput = document.getElementById("action_type");
+    const extractKgBtn = document.getElementById("extract-kg-btn");
+    const addPaperSection = document.getElementById("add-paper-section");
+    const processingSection = document.getElementById("processing-section");
+    const resultsSection = document.getElementById("results-section");
+    const errorSection = document.getElementById("error-section");
+    const errorOutput = document.getElementById("error-output");
+    const viewResultsBtn = document.getElementById("view-results-btn");
+
+    let pollInterval = null;
+    let progressTimer = null;
+    let currentStep = 0;
+    let pendingResult = null;
+
+    const latestDataEl = document.getElementById("latest-result-data");
+    if (latestDataEl) {
+        const latestResult = JSON.parse(latestDataEl.textContent || "null");
+        if (latestResult) renderResults(latestResult);
+    }
+
+    const downloadTriplesBtn = document.getElementById("download-triples-btn");
+    if (downloadTriplesBtn) {
+        downloadTriplesBtn.addEventListener("click", function () {
+            const result = window.latestKGResult;
+            if (!result || !Array.isArray(result.relationships) || result.relationships.length === 0) {
+                alert("No triples are available to download yet.");
+                return;
+            }
+
+            const rows = [["source", "relation", "target", "scope", "evidence"]];
+            result.relationships.forEach(edge => {
+                rows.push([
+                    edge.source || "",
+                    edge.relation || "",
+                    edge.target || "",
+                    edge.scope || "",
+                    edge.evidence || ""
+                ]);
+            });
+
+            const csv = "\uFEFF" + rows.map(row =>
+                row.map(cell => `"${String(cell).replaceAll('"', '""')}"`).join(",")
+            ).join("\n");
+
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "knowledge_graph_triples.csv";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        });
+    }
+
+    const downloadGraphBtn = document.getElementById("download-graph-btn");
+    if (downloadGraphBtn) {
+        downloadGraphBtn.addEventListener("click", function () {
+            const svg = document.getElementById("kg-svg");
+            if (!svg) {
+                alert("No graph is available to download yet.");
+                return;
+            }
+
+            const clonedSvg = svg.cloneNode(true);
+            clonedSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+            clonedSvg.setAttribute("width", "1600");
+            clonedSvg.setAttribute("height", "950");
+
+            const serializer = new XMLSerializer();
+            const source = serializer.serializeToString(clonedSvg);
+            const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "knowledge_graph.svg";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        });
+    }
+
+    const showAddPaperButtons = [
+        document.getElementById("show-add-paper"),
+        document.getElementById("add-paper-bottom")
+    ];
+
+    showAddPaperButtons.forEach(btn => {
+        if (btn) {
+            btn.addEventListener("click", () => {
+                if (analysisForm) {
+                    analysisForm.reset();
+                }
+
+                if (actionTypeInput) {
+                    actionTypeInput.value = "analyze";
+                }
+
+                addPaperSection.classList.remove("hidden");
+                resultsSection.classList.add("hidden");
+                errorSection.classList.add("hidden");
+
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+        }
+    });
+
+    if (extractKgBtn) {
+        extractKgBtn.addEventListener("click", () => {
+            if (actionTypeInput) {
+                actionTypeInput.value = "extract_kg";
+            }
+
+            if (analysisForm) {
+                analysisForm.requestSubmit();
+            }
+        });
+    }
+
+    if (analysisForm) {
+        analysisForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const paperText = document.getElementById("paper_text").value.trim();
+            const userNotes = document.getElementById("user_notes").value.trim();
+            const actionType = actionTypeInput ? actionTypeInput.value : "analyze";
+
+            const paperFile = document.getElementById("paper_file")?.files?.[0];
+
+            if (actionType === "extract_kg") {
+                if (!paperText && !paperFile) {
+                    alert("Please enter paper content or upload a PDF to extract the KG.");
+                    return;
+                }
+            } else {
+                if (!paperText && !paperFile && !userNotes) {
+                    alert("Please enter paper content, upload a PDF, or add notes.");
+                    return;
+                }
+            }
+
+            addPaperSection.classList.add("hidden");
+            resultsSection.classList.add("hidden");
+            errorSection.classList.add("hidden");
+            processingSection.classList.remove("hidden");
+
+            resetVisualProgress();
+            startVisualProgress();
+
+            const formData = new FormData(analysisForm);
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            try {
+                const response = await fetch("{% url 'start_job' %}", {
+                    method: "POST",
+                    body: formData,
+                    headers: { "X-CSRFToken": csrfToken }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Failed to start analysis.");
+                }
+
+                startPolling(data.job_id);
+
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+    }
+
+    // D3 zoom/drag is initialized inside renderKnowledgeGraph().
+    // The buttons are wired there so they always use the current graph instance.
+
+    function startPolling(jobId) {
+        pollInterval = setInterval(async function() {
+            try {
+                const response = await fetch(`/explainer/job-status/${jobId}/`);
+                const data = await response.json();
+
+                if (data.status === "completed") {
+                    clearInterval(pollInterval);
+                    pendingResult = data.result;
+
+                    if (data.project_stats) {
+                        updateProjectStats(data.project_stats);
+                    }
+
+                    completeVisualProgress();
+                    viewResultsBtn.classList.remove("hidden");
+                }
+
+                if (data.status === "failed") {
+                    clearInterval(pollInterval);
+                    showError(data.error_message || "Analysis failed.");
+                }
+
+            } catch (error) {
+                clearInterval(pollInterval);
+                showError("Network error: " + error.message);
+            }
+        }, 1000);
+    }
+
+    if (viewResultsBtn) {
+        viewResultsBtn.addEventListener("click", () => {
+            processingSection.classList.add("hidden");
+            resultsSection.classList.remove("hidden");
+            renderResults(pendingResult);
+
+            if (actionTypeInput) {
+                actionTypeInput.value = "analyze";
+            }
+
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
+
+    function updateProjectStats(stats) {
+        const headerPaperCount = document.getElementById("header-paper-count");
+        if (headerPaperCount) headerPaperCount.textContent = stats.papers_count;
+
+        const existingPaperCount = document.getElementById("existing-paper-count");
+        if (existingPaperCount) existingPaperCount.textContent = stats.papers_count;
+
+        const statusPaperCount = document.getElementById("status-paper-count");
+        if (statusPaperCount) statusPaperCount.textContent = stats.papers_count;
+
+        const statusCoreCount = document.getElementById("status-core-count");
+        if (statusCoreCount) statusCoreCount.textContent = stats.core_concepts_count;
+
+        const statusBlindCount = document.getElementById("status-blind-count");
+        if (statusBlindCount) statusBlindCount.textContent = stats.blind_spots_count;
+
+        const paperLabel = document.getElementById("paper-label");
+        if (paperLabel) paperLabel.textContent = `Upload Paper #${stats.next_paper_number}`;
+
+        const title = document.getElementById("add-paper-title");
+        if (title) title.textContent = stats.papers_count === 0 ? "Add Your First Paper" : "Add Another Paper";
+
+        const buildBtn = document.getElementById("build-kg-btn");
+        if (buildBtn) buildBtn.textContent = stats.papers_count === 0 ? "Build Knowledge Graph" : "Extend Knowledge Graph";
+    }
+
+    function resetVisualProgress() {
+        const title = document.getElementById("processing-title");
+        if (title) title.textContent = "Analyzing...";
+
+        if (viewResultsBtn) viewResultsBtn.classList.add("hidden");
+
+        for (let i = 1; i <= 4; i++) {
+            const row = document.getElementById(`step-${i}`);
+            if (!row) continue;
+            const icon = row.querySelector(".step-icon");
+            row.classList.remove("done", "active");
+            row.classList.add("pending");
+            if (icon) icon.textContent = i;
+        }
+    }
+
+    function startVisualProgress() {
+        currentStep = 1;
+        updateProcessingStep(currentStep);
+
+        if (progressTimer) clearInterval(progressTimer);
+
+        progressTimer = setInterval(() => {
+            currentStep += 1;
+            if (currentStep <= 4) updateProcessingStep(currentStep);
+            else clearInterval(progressTimer);
+        }, 900);
+    }
+
+    function updateProcessingStep(activeStep) {
+        for (let i = 1; i <= 4; i++) {
+            const row = document.getElementById(`step-${i}`);
+            if (!row) continue;
+            const icon = row.querySelector(".step-icon");
+            if (!icon) continue;
+
+            row.classList.remove("done", "active", "pending");
+
+            if (i < activeStep) {
+                row.classList.add("done");
+                icon.innerHTML = "✓";
+            } else if (i === activeStep) {
+                row.classList.add("active");
+                icon.innerHTML = '<div class="spinner"></div>';
+            } else {
+                row.classList.add("pending");
+                icon.textContent = i;
+            }
+        }
+    }
+
+    function completeVisualProgress() {
+        if (progressTimer) clearInterval(progressTimer);
+
+        for (let i = 1; i <= 4; i++) {
+            const row = document.getElementById(`step-${i}`);
+            if (!row) continue;
+            const icon = row.querySelector(".step-icon");
+            row.classList.remove("active", "pending");
+            row.classList.add("done");
+            if (icon) icon.innerHTML = "✓";
+        }
+
+        const title = document.getElementById("processing-title");
+        if (title) title.textContent = "Analysis Complete";
+    }
+
+    function renderResults(result) {
+        if (!result) return;
+
+        window.latestKGResult = result;
+
+        const summaryEl = document.getElementById("big-picture-output");
+        if (summaryEl) {
+            summaryEl.textContent = result.big_picture_summary || "No summary available.";
+        }
+
+        renderPaperList(result);
+        renderBlindSpots(result);
+
+        // Draw the graph last. If D3/legend has an issue, Blind Spot Detection should still render.
+        try {
+            renderKnowledgeGraph(
+                result.concepts || [],
+                result.relationships || [],
+                getBlindSpotConcepts(result),
+                result.concept_sources || {}
+            );
+        } catch (error) {
+            console.error("Knowledge graph rendering failed:", error);
+            const svgEl = document.getElementById("kg-svg");
+            if (svgEl) {
+                svgEl.innerHTML = `<text x="50%" y="50%" text-anchor="middle" fill="#777">Graph rendering failed. Blind spots are still available below.</text>`;
+            }
+        }
+    }
+
+    function renderBlindSpots(result) {
+        const blindBox = document.getElementById("blind-spots-output");
+        if (!blindBox) return;
+
+        blindBox.innerHTML = "";
+
+        let blindSpots = Array.isArray(result.blind_spots) ? result.blind_spots.filter(Boolean) : [];
+
+        // Frontend fallback for old saved results or any response where backend blind_spots is empty.
+        // It uses the current Listed Paper View: each paper's concepts and notes.
+        if (blindSpots.length === 0) {
+            blindSpots = buildBlindSpotsFromPaperItems(result.paper_items || []);
+        }
+
+        if (blindSpots.length === 0) {
+            blindBox.innerHTML = `
+                <div class="section">
+                    <p class="muted">No blind spots detected yet.</p>
+                    <p class="muted">Add paper concepts and notes, then run the analysis again.</p>
+                </div>
+            `;
+            return;
+        }
+
+        blindSpots.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "section warning";
+            div.innerHTML = `
+                <h3>${escapeHTML(item.concept || "Unnamed Concept")}</h3>
+                ${item.paper ? `<p class="muted"><strong>${escapeHTML(item.paper)}</strong>${item.paper_title ? `: ${escapeHTML(item.paper_title)}` : ""}</p>` : ""}
+                <p><strong>Why it matters:</strong> ${escapeHTML(item.why_it_matters || "This concept is listed in the paper concepts but is not clearly reflected in your notes.")}</p>
+                <p><strong>Suggested next step:</strong> ${escapeHTML(item.suggested_next_step || "Add a short note explaining this concept and how it connects to the paper.")}</p>
+            `;
+            blindBox.appendChild(div);
+        });
+    }
+
+    function buildBlindSpotsFromPaperItems(paperItems) {
+        const blindSpots = [];
+        const seen = new Set();
+
+        if (!Array.isArray(paperItems)) return blindSpots;
+
+        paperItems.forEach(item => {
+            const paperNumber = item?.paper_number || "";
+            const title = item?.title || `Paper ${paperNumber}`;
+            const notesRaw = String(item?.notes || "").trim();
+            const notesNormalized = normalizeForMatch(notesRaw);
+            const concepts = Array.isArray(item?.concepts) ? item.concepts : [];
+
+            concepts.forEach(concept => {
+                const conceptLabel = String(concept || "").trim();
+                if (!conceptLabel) return;
+
+                const key = `${paperNumber}:${normalizeForMatch(conceptLabel)}`;
+                if (seen.has(key)) return;
+
+                // Covered only if the concept label or a simple variant appears in this paper's notes.
+                if (notesNormalized && conceptAppearsInNotes(conceptLabel, notesRaw)) return;
+
+                blindSpots.push({
+                    concept: conceptLabel,
+                    paper: paperNumber ? `Paper ${paperNumber}` : "Paper",
+                    paper_title: title,
+                    why_it_matters: notesRaw
+                        ? `'${conceptLabel}' is listed as a paper concept in ${title}, but it is not clearly reflected in your notes.`
+                        : `'${conceptLabel}' is listed as a paper concept in ${title}, but no notes were provided for this paper.`,
+                    suggested_next_step: `Add one or two sentences explaining '${conceptLabel}' in your notes for this paper.`
+                });
+
+                seen.add(key);
+            });
+        });
+
+        return blindSpots;
+    }
+
+    function getBlindSpotConcepts(result) {
+        const fromBackend = Array.isArray(result.blind_spots) ? result.blind_spots : [];
+        const spots = fromBackend.length > 0 ? fromBackend : buildBlindSpotsFromPaperItems(result.paper_items || []);
+        return spots.map(item => item.concept).filter(Boolean);
+    }
+
+    function normalizeForMatch(value) {
+        return String(value || "")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, " ")
+            .trim();
+    }
+
+    function conceptVariants(concept) {
+        const raw = String(concept || "").trim();
+        const variants = new Set([raw]);
+        const noParen = raw.replace(/\s*\([^)]*\)/g, "").trim();
+        if (noParen) variants.add(noParen);
+
+        const insideMatches = [...raw.matchAll(/\(([^)]+)\)/g)];
+        insideMatches.forEach(match => {
+            if (match[1]) variants.add(match[1]);
+        });
+
+        Array.from(variants).forEach(item => {
+            const value = String(item).trim();
+            if (!value) return;
+            if (value.toLowerCase().endsWith("s") && value.length > 3) {
+                variants.add(value.slice(0, -1));
+            } else {
+                variants.add(`${value}s`);
+            }
+        });
+
+        return Array.from(variants).filter(Boolean);
+    }
+
+    function conceptAppearsInNotes(concept, notesText) {
+        const normalizedNotes = ` ${normalizeForMatch(notesText)} `;
+        if (!normalizedNotes.trim()) return false;
+
+        return conceptVariants(concept).some(variant => {
+            const normalizedVariant = normalizeForMatch(variant);
+            return normalizedVariant && normalizedNotes.includes(` ${normalizedVariant} `);
+        });
+    }
+
+    function renderPaperList(result) {
+        const box = document.getElementById("paper-list-output");
+        if (!box) return;
+
+        let paperItems = Array.isArray(result.paper_items) ? result.paper_items : [];
+
+        // Backward-compatible fallback for old saved results.
+        if (paperItems.length === 0) {
+            const conceptSources = result.concept_sources || {};
+            const fallbackMap = {};
+
+            Object.entries(conceptSources).forEach(([concept, papers]) => {
+                (papers || []).forEach(paperNo => {
+                    if (!fallbackMap[paperNo]) {
+                        fallbackMap[paperNo] = {
+                            paper_number: paperNo,
+                            title: `Paper ${paperNo}`,
+                            concepts: [],
+                            notes: ""
+                        };
+                    }
+                    fallbackMap[paperNo].concepts.push(concept);
+                });
+            });
+
+            paperItems = Object.values(fallbackMap);
+        }
+
+        paperItems.sort((a, b) => Number(a.paper_number || 999) - Number(b.paper_number || 999));
+
+        box.innerHTML = `
+            <div class="paper-header">
+                <span>Paper</span>
+                <span>Title</span>
+                <span>Paper Concepts</span>
+                <span>Your Notes</span>
+            </div>
+        `;
+
+        if (paperItems.length === 0) {
+            box.innerHTML = `<p class="muted">No paper list available yet.</p>`;
+            return;
+        }
+
+        paperItems.forEach(item => {
+            const concepts = Array.isArray(item.concepts) ? item.concepts : [];
+            const notes = String(item.notes || "").trim();
+
+            const div = document.createElement("div");
+            div.className = "paper-row";
+
+            div.innerHTML = `
+                <div class="paper-row-number">Paper ${escapeHTML(item.paper_number || "")}</div>
+                <div class="paper-row-title">${escapeHTML(item.title || `Paper ${item.paper_number || ""}`)}</div>
+                <div class="paper-row-concepts">
+                    ${concepts.length > 0 ? escapeHTML(concepts.join(", ")) : `<span class="paper-row-empty">No concepts</span>`}
+                </div>
+                <div class="paper-row-notes">
+                    ${notes ? escapeHTML(truncateText(notes, 160)) : `<span class="paper-row-empty">No notes</span>`}
+                </div>
+            `;
+
+            box.appendChild(div);
+        });
+    }
+
+    function renderAlignmentComparison(result) {
+        const paperBox = document.getElementById("paper-concepts-output");
+        const notesBox = document.getElementById("notes-concepts-output");
+
+        if (!paperBox || !notesBox) return;
+
+        const concepts = result.paper_concepts || result.concepts || [];
+        const covered = result.alignment?.covered_concepts || [];
+        const missing = result.alignment?.missing_concepts || [];
+        const weak = result.alignment?.weakly_covered_concepts || [];
+
+        const normalizedCovered = covered.map(x => String(x).toLowerCase());
+        const normalizedMissing = missing.map(x => String(x).toLowerCase());
+        const normalizedWeak = weak.map(x => String(x).toLowerCase());
+
+        const noteConcepts = [...new Set(result.note_concepts || [...covered, ...weak])];
+        const rawNotes = String(result.current_user_notes || "").trim();
+
+        paperBox.innerHTML = "";
+        notesBox.innerHTML = "";
+
+        if (concepts.length === 0) {
+            paperBox.innerHTML = "<p>No paper concepts found.</p>";
+        }
+
+        concepts.forEach(concept => {
+            const lower = String(concept).toLowerCase();
+            const isCovered = normalizedCovered.includes(lower);
+            const isMissingOrWeak =
+                normalizedMissing.includes(lower) ||
+                normalizedWeak.includes(lower) ||
+                !isCovered;
+
+            const div = document.createElement("div");
+            div.className = "alignment-item";
+
+            div.innerHTML = `
+                <span class="status-icon ${isCovered ? "status-covered" : "status-missing"}">
+                    ${isCovered ? "✓" : "!"}
+                </span>
+                <span>${escapeHTML(concept)}</span>
+            `;
+
+            paperBox.appendChild(div);
+        });
+
+        if (noteConcepts.length === 0) {
+            if (rawNotes) {
+                notesBox.innerHTML = `
+                    <div class="notes-raw-box">${escapeHTML(rawNotes)}</div>
+                    <p class="muted">No matched note concepts were detected, but your original notes are shown above.</p>
+                `;
+            } else {
+                notesBox.innerHTML = `
+                    <p class="muted">No notes provided for this paper.</p>
+                    <p class="muted">Add notes to compare your understanding with the paper concepts.</p>
+                `;
+            }
+            return;
+        }
+
+        noteConcepts.forEach(concept => {
+            const div = document.createElement("div");
+            div.className = "alignment-item";
+
+            div.innerHTML = `
+                <span class="status-icon status-covered">✓</span>
+                <span>${escapeHTML(concept)}</span>
+            `;
+
+            notesBox.appendChild(div);
+        });
+    }
+
+    function renderKnowledgeGraph(concepts, relationships, missingConcepts, conceptSources) {
+        const svgEl = document.getElementById("kg-svg");
+        if (!svgEl) return;
+
+        if (typeof d3 === "undefined") {
+            svgEl.innerHTML = `<text x="50%" y="50%" text-anchor="middle" fill="#777">D3 library is not loaded.</text>`;
+            return;
+        }
+
+        const width = 1600;
+        const height = 950;
+        const maxEdges = 120;
+
+        svgEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
+        svgEl.setAttribute("height", "760");
+        svgEl.innerHTML = "";
+
+        const svg = d3.select(svgEl);
+
+        svg.append("defs").html(`
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="12" refY="5" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,10 L10,5 z" fill="#666"></path>
+            </marker>
+            <marker id="arrow-weak" markerWidth="10" markerHeight="10" refX="12" refY="5" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,10 L10,5 z" fill="#9ca3af"></path>
+            </marker>
+        `);
+
+        const graphGroup = svg.append("g").attr("id", "graph-content");
+        const linkLayer = graphGroup.append("g").attr("class", "links");
+        const labelLayer = graphGroup.append("g").attr("class", "edge-labels");
+        const nodeLayer = graphGroup.append("g").attr("class", "nodes");
+
+        const cleanRelationships = (relationships || [])
+            .filter(edge => edge && edge.source && edge.target && String(edge.source) !== String(edge.target))
+            .slice(0, maxEdges);
+
+        const conceptSet = new Set();
+        (concepts || []).forEach(concept => {
+            if (concept) conceptSet.add(String(concept));
+        });
+        cleanRelationships.forEach(edge => {
+            conceptSet.add(String(edge.source));
+            conceptSet.add(String(edge.target));
+        });
+
+        const allConcepts = Array.from(conceptSet).filter(Boolean);
+
+        if (allConcepts.length === 0) {
+            graphGroup.append("text")
+                .attr("x", width / 2)
+                .attr("y", height / 2)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#777")
+                .text("No graph data available.");
+            renderGraphLegend([]);
+            return;
+        }
+
+        const degree = {};
+        cleanRelationships.forEach(edge => {
+            const source = String(edge.source);
+            const target = String(edge.target);
+            degree[source] = (degree[source] || 0) + 1;
+            degree[target] = (degree[target] || 0) + 1;
+        });
+
+        const missingSet = new Set((missingConcepts || []).map(String));
+
+        function getSources(concept) {
+            return conceptSources?.[concept] || conceptSources?.[String(concept)] || [];
+        }
+
+        function getNodeColor(concept) {
+            const sources = getSources(concept);
+            if (sources.length > 1) return "#f59e0b";
+            if (sources[0] === 1) return "#3b82f6";
+            if (sources[0] === 2) return "#22c55e";
+            if (sources[0] === 3) return "#a855f7";
+            if (sources[0] === 4) return "#ef4444";
+            if (sources[0] === 5) return "#06b6d4";
+            return "#64748b";
+        }
+
+        const nodes = allConcepts
+            .sort((a, b) => (degree[b] || 0) - (degree[a] || 0))
+            .map(concept => {
+                const sources = getSources(concept);
+                return {
+                    id: concept,
+                    radius: Math.min(72, 44 + (degree[concept] || 0) * 5),
+                    degree: degree[concept] || 0,
+                    missing: missingSet.has(concept),
+                    sources,
+                    color: getNodeColor(concept),
+                    isShared: sources.length > 1
+                };
+            });
+
+        const links = cleanRelationships.map(edge => ({
+            source: String(edge.source),
+            target: String(edge.target),
+            relation: edge.relation || "relates to",
+            scope: edge.scope || "",
+            evidence: edge.evidence || ""
+        }));
+
+        // Give D3 a stable radial starting point similar to the previous graph.
+        const paperGroups = new Map();
+        const sharedNodes = [];
+        nodes.forEach(node => {
+            if (node.isShared || node.degree >= 3) {
+                sharedNodes.push(node);
+            } else {
+                const key = node.sources.length ? `P${node.sources[0]}` : "unknown";
+                if (!paperGroups.has(key)) paperGroups.set(key, []);
+                paperGroups.get(key).push(node);
+            }
+        });
+
+        if (sharedNodes.length === 0 && nodes.length > 0) {
+            sharedNodes.push(nodes[0]);
+        }
+
+        sharedNodes.forEach((node, index) => {
+            const angle = -Math.PI / 2 + (2 * Math.PI * index / Math.max(1, sharedNodes.length));
+            const r = sharedNodes.length <= 1 ? 0 : Math.min(160, 55 + sharedNodes.length * 18);
+            node.x = width / 2 + Math.cos(angle) * r;
+            node.y = height / 2 + Math.sin(angle) * r;
+        });
+
+        const groups = [...paperGroups.entries()].filter(([_, items]) => items.length > 0);
+        groups.sort((a, b) => {
+            const aNum = parseInt(String(a[0]).replace("P", "")) || 999;
+            const bNum = parseInt(String(b[0]).replace("P", "")) || 999;
+            return aNum - bNum;
+        });
+
+        groups.forEach(([groupKey, items], groupIndex) => {
+            const angle = -Math.PI / 2 + (2 * Math.PI * groupIndex / Math.max(1, groups.length));
+            const clusterX = width / 2 + Math.cos(angle) * 360;
+            const clusterY = height / 2 + Math.sin(angle) * 330;
+
+            items.forEach((node, index) => {
+                const localAngle = angle + Math.PI + ((index - (items.length - 1) / 2) * 0.5);
+                const ring = 120 + (index % 3) * 35;
+                node.x = clusterX + Math.cos(localAngle) * ring;
+                node.y = clusterY + Math.sin(localAngle) * ring;
+            });
+        });
+
+        const link = linkLayer.selectAll("line")
+            .data(links)
+            .enter()
+            .append("line")
+            .attr("stroke", d => d.scope === "weak_cross_paper" ? "#9ca3af" : "#666")
+            .attr("stroke-width", 2)
+            .attr("stroke-dasharray", d => d.scope === "weak_cross_paper" ? "6 5" : null)
+            .attr("marker-end", d => d.scope === "weak_cross_paper" ? "url(#arrow-weak)" : "url(#arrow)");
+
+        link.append("title")
+            .text(d => `${d.source} → ${d.target}\nRelation: ${d.relation}\nScope: ${d.scope}\nEvidence: ${d.evidence || "No evidence provided"}`);
+
+        const edgeLabel = labelLayer.selectAll("text")
+            .data(links)
+            .enter()
+            .append("text")
+            .attr("font-size", "10px")
+            .attr("fill", d => d.scope === "weak_cross_paper" ? "#6b7280" : "#475569")
+            .attr("font-style", d => d.scope === "weak_cross_paper" ? "italic" : "normal")
+            .attr("text-anchor", "middle")
+            .attr("pointer-events", "none")
+            .text(d => d.relation);
+
+        const node = nodeLayer.selectAll("g")
+            .data(nodes)
+            .enter()
+            .append("g")
+            .attr("cursor", "grab")
+            .call(
+                d3.drag()
+                    .on("start", dragStarted)
+                    .on("drag", dragged)
+                    .on("end", dragEnded)
+            );
+
+        node.append("circle")
+            .attr("r", d => d.radius)
+            .attr("fill", "white")
+            .attr("stroke", d => d.missing ? "#f97316" : d.color)
+            .attr("stroke-width", d => d.missing ? 5 : 4);
+
+        node.append("title")
+            .text(d => {
+                const sourceLabel = d.sources?.length ? `Papers: P${d.sources.join(", P")}` : "Source unknown";
+                return `${d.id}\n${sourceLabel}\nDegree: ${d.degree}`;
+            });
+
+        node.append("text")
+            .attr("y", d => -d.radius + 15)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "10px")
+            .attr("font-weight", "700")
+            .attr("fill", "#64748b")
+            .attr("pointer-events", "none")
+            .text(d => {
+                if (!d.sources || d.sources.length === 0) return "";
+                return d.sources.length > 1 ? `P${d.sources.join(",")}` : `P${d.sources[0]}`;
+            });
+
+        node.append("text")
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "middle")
+            .attr("font-size", "12px")
+            .attr("font-weight", "700")
+            .attr("fill", "#111827")
+            .attr("pointer-events", "none")
+            .each(function(d) {
+                const lines = wrapText(d.id, 14).slice(0, 4);
+                const text = d3.select(this);
+                text.text("");
+
+                const lineHeight = 14;
+                const startY = -((lines.length - 1) * lineHeight) / 2;
+
+                lines.forEach((line, index) => {
+                    text.append("tspan")
+                        .attr("x", 0)
+                        .attr("y", startY + index * lineHeight)
+                        .text(line);
+                });
+            });
+
+        const simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links)
+                .id(d => d.id)
+                .distance(d => {
+                    const sr = typeof d.source === "object" ? d.source.radius : 48;
+                    const tr = typeof d.target === "object" ? d.target.radius : 48;
+                    return sr + tr + 95;
+                })
+                .strength(0.5)
+            )
+            .force("charge", d3.forceManyBody().strength(-850))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(d => d.radius + 24).strength(0.95))
+            .force("x", d3.forceX(width / 2).strength(0.035))
+            .force("y", d3.forceY(height / 2).strength(0.035));
+
+        simulation.on("tick", () => {
+            nodes.forEach(d => {
+                d.x = Math.max(d.radius + 28, Math.min(width - d.radius - 28, d.x));
+                d.y = Math.max(d.radius + 28, Math.min(height - d.radius - 28, d.y));
+            });
+
+            link
+                .attr("x1", d => edgeStartPoint(d).x)
+                .attr("y1", d => edgeStartPoint(d).y)
+                .attr("x2", d => edgeEndPoint(d).x)
+                .attr("y2", d => edgeEndPoint(d).y);
+
+            edgeLabel
+                .attr("x", d => (d.source.x + d.target.x) / 2)
+                .attr("y", d => (d.source.y + d.target.y) / 2 - 6);
+
+            node.attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+
+        function edgeStartPoint(d) {
+            const dx = d.target.x - d.source.x;
+            const dy = d.target.y - d.source.y;
+            const length = Math.sqrt(dx * dx + dy * dy) || 1;
+            return {
+                x: d.source.x + (dx / length) * d.source.radius,
+                y: d.source.y + (dy / length) * d.source.radius
+            };
+        }
+
+        function edgeEndPoint(d) {
+            const dx = d.target.x - d.source.x;
+            const dy = d.target.y - d.source.y;
+            const length = Math.sqrt(dx * dx + dy * dy) || 1;
+            return {
+                x: d.target.x - (dx / length) * (d.target.radius + 10),
+                y: d.target.y - (dy / length) * (d.target.radius + 10)
+            };
+        }
+
+        const zoom = d3.zoom()
+            .scaleExtent([0.35, 3])
+            .on("zoom", event => {
+                graphGroup.attr("transform", event.transform);
+            });
+
+        svg.call(zoom);
+
+        const zoomInBtn = document.getElementById("zoom-in-btn");
+        const zoomOutBtn = document.getElementById("zoom-out-btn");
+        const zoomResetBtn = document.getElementById("zoom-reset-btn");
+
+        if (zoomInBtn) {
+            zoomInBtn.onclick = () => {
+                svg.transition().duration(200).call(zoom.scaleBy, 1.2);
+            };
+        }
+
+        if (zoomOutBtn) {
+            zoomOutBtn.onclick = () => {
+                svg.transition().duration(200).call(zoom.scaleBy, 1 / 1.2);
+            };
+        }
+
+        if (zoomResetBtn) {
+            zoomResetBtn.onclick = () => {
+                svg.transition().duration(250).call(zoom.transform, d3.zoomIdentity);
+            };
+        }
+
+        svg.transition().duration(250).call(zoom.transform, d3.zoomIdentity);
+        renderGraphLegend(nodes);
+
+        function dragStarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+            d3.select(this).attr("cursor", "grabbing");
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragEnded(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+            d3.select(this).attr("cursor", "grab");
+        }
+    }
+
+    function getSourceColor(sources) {
+        const list = Array.isArray(sources) ? sources.map(Number).filter(Boolean) : [];
+        if (list.length > 1) return "#f59e0b";
+        if (list[0] === 1) return "#3b82f6";
+        if (list[0] === 2) return "#22c55e";
+        if (list[0] === 3) return "#a855f7";
+        if (list[0] === 4) return "#ef4444";
+        if (list[0] === 5) return "#06b6d4";
+        return "#64748b";
+    }
+
+    function getSourceLabel(sources) {
+        const list = Array.isArray(sources) ? sources.map(Number).filter(Boolean) : [];
+        if (list.length === 0) return "Source unknown";
+        if (list.length > 1) return `Shared: P${list.join(", P")}`;
+        return `Paper ${list[0]}`;
+    }
+
+    function renderGraphLegend(nodes) {
+        const legend = document.getElementById("graph-legend");
+        if (!legend) return;
+
+        const seen = new Map();
+        nodes.forEach(node => {
+            const key = (node.sources || []).join(",") || "unknown";
+            if (!seen.has(key)) {
+                seen.set(key, node.sources || []);
+            }
+        });
+
+        legend.innerHTML = "";
+        seen.forEach(sources => {
+            const item = document.createElement("span");
+            item.className = "legend-item";
+            item.innerHTML = `
+                <span class="legend-dot" style="background:${getSourceColor(sources)}"></span>
+                <span>${escapeHTML(getSourceLabel(sources))}</span>
+            `;
+            legend.appendChild(item);
+        });
+
+        const strongEdgeItem = document.createElement("span");
+        strongEdgeItem.className = "legend-item";
+        strongEdgeItem.innerHTML = `
+            <span class="legend-line"></span>
+            <span>Supported relation</span>
+        `;
+        legend.appendChild(strongEdgeItem);
+
+        const weakEdgeItem = document.createElement("span");
+        weakEdgeItem.className = "legend-item";
+        weakEdgeItem.innerHTML = `
+            <span class="legend-line dashed"></span>
+            <span>Weak cross-paper link</span>
+        `;
+        legend.appendChild(weakEdgeItem);
+    }
+
+
+    function buildEdgeTooltip(edge, isWeakCrossPaper) {
+        const relation = edge.relation || "relates to";
+        const scope = edge.scope || "unknown";
+        const evidence = edge.evidence || "No evidence provided.";
+        const warning = isWeakCrossPaper
+            ? "This is a weak cross-paper link, not a strong semantic claim."
+            : "This relation is treated as directly supported.";
+
+        return `Relation: ${relation}
+Scope: ${scope}
+Evidence: ${evidence}
+Note: ${warning}`;
+    }
+
+    function wrapText(text, maxChars) {
+        const words = String(text).split(" ");
+        const lines = [];
+        let current = "";
+
+        words.forEach(word => {
+            if ((current + " " + word).trim().length <= maxChars) {
+                current = (current + " " + word).trim();
+            } else {
+                if (current) lines.push(current);
+                current = word;
+            }
+        });
+
+        if (current) lines.push(current);
+        return lines.slice(0, 3);
+    }
+
+    function truncateText(text, maxLength) {
+        const value = String(text || "");
+        if (value.length <= maxLength) return value;
+        return value.slice(0, maxLength - 1) + "…";
+    }
+
+    function showError(message) {
+        if (pollInterval) clearInterval(pollInterval);
+        if (progressTimer) clearInterval(progressTimer);
+
+        if (processingSection) processingSection.classList.add("hidden");
+        if (errorSection) errorSection.classList.remove("hidden");
+        if (errorOutput) errorOutput.textContent = message;
+    }
+
+    function escapeHTML(value) {
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+});
+</script>
+
+</body>
+</html>

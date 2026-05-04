@@ -3,6 +3,11 @@
 
 A knowledge graph-based reflection assistant that helps users synthesize insights across multiple conference sessions.
 
+
+## ■ Demo
+
+https://github.com/user-attachments/assets/88128c70-10bb-488e-b047-0310cd6a7708
+
 ---
 
 ## ■ Overview
@@ -123,13 +128,5 @@ This system builds a **Knowledge Graph-based reflection assistant** that:
 - Improve concept alignment across papers
 - Enhance relation quality
 - Scale to larger multi-document datasets
-
----
-
-## ■ Demo
-
-https://github.com/user-attachments/assets/88128c70-10bb-488e-b047-0310cd6a7708
-
-
 
 ---
